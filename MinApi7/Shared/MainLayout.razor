@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>Min Api Net 7.0</PageTitle>
+
+<div class="page">
+    <!-- Sidebar Menu -->
+    <div class="sidebar" style="width:370px;background-image:linear-gradient(to bottom right, #001100, #55555f);border-left:solid 1px white">
+        <NavMenu />
+    </div>
+
+    <!-- Single Page Area -->
+    <div class="container-fluid m-0 p-0 vh-100" style="background-color:@CorDeFundo;color:@CorDoTexto;border-left:solid 1px white;border-right:solid 1px white">
+        @Body
+    </div>
+</div>
+
+@code {
+    string CorDeFundo = "white";
+    string CorDoTexto = "black";
+}

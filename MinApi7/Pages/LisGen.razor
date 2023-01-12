@@ -1,0 +1,214 @@
+﻿@page "/LisGen"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using static Common.Models;
+@using static Common.Code;
+@using static Common.Data;
+
+<PageTitle>Record List Generator</PageTitle>
+
+<TopBanner BannerTxt="QUICKGRID Net 7.0">    
+    <h6 class="text-center m-1 p-1">Open Source Datagrid Component developed by Microsoft, maybe, to be a part NET 7.</h6>
+</TopBanner>
+
+<!-- Html Code -->
+<div class="container-fluid h100" style="background-color:lightgray;overflow-y:auto;">
+    <div class="row m-0 p-0">
+        <div class="col-8"></div>
+        <div class="col-1">
+            <label>Records</label>
+            <button class="button flexRowStart" style="width:100%;" @onclick="() => GenListPersons( nRecs)">Build <img class="htmlbtn" /></button>
+        </div>
+        <div class="col-1">
+            <label>Count</label>
+            <input type="number" style="text-align:center;width:100%;" @bind=nRecs />
+        </div>
+        <div class="col-1">
+            <label>Rows per Page</label>
+            <input type="number" style="text-align:center;width:100%" @bind="@nRows" @onclick="RefreshPage" />
+        </div>
+        <div class="col-1 ">
+            <label>Show Salary</label>
+            <input type="checkbox" class="mt-0 p-2" style="text-align:left;width:100%;height:50%;outline:solid 0px red;" @bind="@ShowSalary" />
+        </div>
+    </div>
+    <br /> 
+    <div class="col-12 flexColCenter">       
+        <QuickGrid class="titleFont" Items="@FilteredPersons" ResizableColumns="true" Pagination="@pagination" >
+
+            <TemplateColumn Title="Country" Class="titleFont" SortBy="@sortByCountry" >
+                <div class="flex items-center">
+                    <nobr>
+                        <strong>@context.Country</strong>
+                    </nobr>
+                </div>
+            </TemplateColumn>
+
+            <PropertyColumn Title="ID"   Class="titleFont" Property="f => f.PersonId" Sortable="true" Align="Align.Left"/>
+            
+            <PropertyColumn Title="Name" Class="titleFont" Property="f => f.Name"     Sortable="true" Align="Align.Left">
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="name ..." />
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+            
+            <TemplateColumn Title=" Symbol" Class="titleFont" SortBy="@sortByCountry">
+                <div class="flexColCenter">
+                    <img src="Flags/@(context.Country).ico" width="30" height="30" />
+                 </div>
+            </TemplateColumn>
+            
+            <PropertyColumn Title="Gender" Class="titleFont" Property="f => f.MF" Sortable="true" Align="Align.Left" />
+
+            <PropertyColumn Title="Age" Class="titleFont" Property="f => f.Age" Sortable="true" Align="Align.Center" />
+            
+            <PropertyColumn Title="Initial Date" Class="titleFont" Property="f => f.InitialDate" Format="yyyy-MM-dd" Sortable="true" Align="Align.Left" />
+            
+            <PropertyColumn Title="Dias Corridos" Class="titleFont" Property="@(c => (DateTime.Now - c.InitialDate).Days)" Sortable="true" Align="Align.Center" />
+
+            @if (ShowSalary)
+            {
+                <PropertyColumn Title="Hourly Wage" Class="titleFont" Property="f => f.HourlyWage" Format="N2" Sortable="true" Align="Align.Center">
+                    <ColumnOptions>
+                        <div class="search-box">
+                            <p>Min: <input type="range" @bind="minHourlyWage" @bind:event="oninput" min="0" max="25" /> <span class="inline-block w-10">@minHourlyWage</span></p>
+                            <p>Max: <input type="range" @bind="maxHourlyWage" @bind:event="oninput" min="0" max="25" /> <span class="inline-block w-10">@maxHourlyWage</span></p>
+                        </div>
+                    </ColumnOptions>
+                </PropertyColumn>
+
+                <TemplateColumn Title="Actions">
+                    <button class="btn btn-sm p-0" style="width:40%" @onclick="@(() => EditPerson  ( context))">
+                        <img src="Flags/crayondw.ico" width="22" height="22">
+                    </button>
+                    <button class="btn btn-sm p-0" style="width:40%" @onclick="@(() => DeletePerson( context))">
+                        <img src="Flags/trash.ico" width="22" height="22">
+                    </button>                    
+                </TemplateColumn>
+            }
+        </QuickGrid>
+        <Paginator Value="@pagination" />
+     </div>
+     <div class="row m-0 p-0">
+        <div class="col-2"></div>
+        <div class="col-6 flexColStart">
+            <label></label>
+            <input type="search" autofocus @bind="Msg" style="background-color:lightgray ;border:solid 0px black;width:100%">
+        </div>
+     </div>
+</div>
+<!-- Css Styling -->
+<style>
+    .titleFont {
+        color: darkolivegreen;
+        font-family: 'Montserrat';
+        font-size: 1.1em;
+    }
+    h2 {
+        font-family: 'Montserrat';
+        font-size: 2em;
+    }
+    h3 {
+        font-family: 'Montserrat';
+        font-size: 1.5em;
+    }
+    .h100 {
+        height: 90%;
+    }
+    .flexColStart {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        color: black;
+    }
+    .flexColCenter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: black;
+    }
+    .flexRowStart {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: left;
+        color: black;
+    }
+    .flexRowEnd {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: right;
+        color: black;
+    }
+    button {
+        btn btn-labeled btn-primary btn-sm;
+        margin-right: 3px;
+        border: solid 1px black;
+    }
+    .htmlbtn {
+        background-image: url(/icons/maintenance_32px.png);
+        padding: 10px;
+        margin-left: 4px;
+        /*margin-left: 40px;*/
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    label {
+        font-size: 12px;
+        color: red;
+    }
+</style>
+<!-- C# Code -->
+@code {
+    private int nRecs = 60;
+    private static int nRows = 24;
+    private string Msg = "";
+    private string? nameFilter;
+    private decimal minHourlyWage = 0;
+    private decimal maxHourlyWage = 25;
+    private bool ShowSalary = false;
+    List<Person> persons = new();
+
+    GridSort<Person> sortByCountry = GridSort<Person>.ByAscending(p => p.Country);
+    IQueryable<Person> FilteredPersons
+    {
+        get
+        {
+            var result = persons.AsQueryable();    //  If no filters apply this will be the result
+
+            //  Deals with search by name
+            if (!string.IsNullOrEmpty(nameFilter)) result = result!.Where(c => c.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+            //  Filter by min value
+            if (minHourlyWage > 0) result = result.Where(c => c.HourlyWage >= minHourlyWage);
+            //  Filter by max value
+            if (maxHourlyWage > 0) result = result.Where(c => c.HourlyWage <= maxHourlyWage);
+
+            return result!;
+        }
+    }
+    PaginationState pagination = new PaginationState { ItemsPerPage = nRows };
+
+    private void GenListPersons(int nRecs)
+    {
+        try
+        {
+            if (nRecs < ((Enum.GetValues(typeof(FirstNamesM)).Length + Enum.GetValues(typeof(FirstNamesF)).Length)
+                                              * Enum.GetValues(typeof(LastNames)).Length))
+            {
+                persons = GenPersons(nRecs);    
+                Msg = "";               
+            }
+            else
+                Msg = "List length requires more unique records than we can generate !";
+        }
+        catch (Exception ex) { Msg = ex.Message; }
+    }
+    private void RefreshPage() => pagination.ItemsPerPage = nRows;
+    private void EditPerson(Person p) => Msg = "Edit : " + p.Name;
+    private void DeletePerson(Person p) => Msg = "Delete : " + p.Name;
+    private void ClearMsg() => Msg = "";
+}

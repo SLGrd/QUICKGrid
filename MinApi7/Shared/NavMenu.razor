@@ -1,0 +1,201 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Laplace Models</a>
+        <button title="Navigation menu" class="navbar-toggler btn btn-primary" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>            
+        </button>       
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable visible">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="LisGen">
+                <span class="oi oi-plus" aria-hidden="true"></span> Demonstration
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+<style>
+    .invisible {
+        visibility: hidden;
+ /*       position: absolute;
+        top: -9999px;*/
+    }
+    .visible {
+        visibility: visible;
+        /*position: static;*/
+    }
+    .h100 {
+        height: 100%;
+    }
+    .flexColStart {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        color: black;
+    }
+    .flexColCenter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: black;
+    }
+    .flexRowStart {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: left;
+        color: black;
+    }
+    .flexRowEnd {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: right;
+        color: black;
+    }
+    button {
+        btn btn-labeled btn-primary btn-sm;
+        margin-right: 3px;
+        border: solid 1px red;
+    }
+    .htmlbtn {
+        background-image: url(/icons/maintenance_32px.png);
+        padding: 10px;
+        margin-left: 4px;
+        /*margin-left: 40px;*/
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    .Img {
+        border: none;
+        padding: 4px;
+        margin-left: 1px;
+        margin-right: 1px;
+        height: 24px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    .UpImage {
+        background-image: url(/icons/UpArrow.png);
+    }
+    .DownImage {
+        background-image: url(/icons/DownArrow.png);
+    }
+    .PageImage {
+        background-image: url(/icons/Weather17.png);
+        padding: 10px;
+        margin-left: 4px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    label {
+        font-size: 12px;
+        color: red;
+    }
+    .Min {
+        color: red
+    }
+    .Max {
+        color: blueviolet;
+    }
+    .Reg {
+        color: black;
+    }
+    .navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.top-row {
+    height: 3.5rem;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+.oi {
+    width: 2rem;
+    font-size: 1.1rem;
+    vertical-align: text-top;
+    top: -2px;
+}
+
+.nav-item {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+/*    .nav-item ::deep a {
+        color: #d7d7d7;
+        border-radius: 4px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+
+.nav-item ::deep a.active {
+    background-color: rgba(255,255,255,0.25);
+    color: white;
+}
+
+.nav-item ::deep a:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}*/
+
+    @@media (min-width: 641px) {
+    .navbar-toggler {
+        display:  flex;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+    
+    .nav-scrollable {
+        /* Allow sidebar to scroll for tall menus */
+        height: calc(100vh - 3.5rem);
+        overflow-y: auto;
+    }
+}
+</style>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string Visible = "visible";
+    private string Largura = "370px";
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : "null";
+
+    private void ToggleNavMenu()
+    {
+        Visible = Visible == "visible" ? "invisible" : "visible";
+        Largura = Largura == "370px" ? "70px" : "370px";
+        this.StateHasChanged();
+    }
+}
